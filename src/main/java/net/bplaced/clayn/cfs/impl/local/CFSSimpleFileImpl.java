@@ -132,4 +132,12 @@ public class CFSSimpleFileImpl implements SimpleFile
     {
         return charset;
     }
+
+    @Override
+    public String toString()
+    {
+        return parent.toString()+getName();
+    }
+    
+    
 }
