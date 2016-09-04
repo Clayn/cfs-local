@@ -49,6 +49,8 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public void delete() throws IOException
     {
+        if(!exists())
+            return;
         Files.delete(realFile);
     }
 
