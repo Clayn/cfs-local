@@ -14,35 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.bplaced.clayn.test.base.local;
+package net.bplaced.clayn.cfs.impl.local;
 
-import java.io.File;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import java.util.Arrays;
 import net.bplaced.clayn.cfs.CFileSystem;
-import net.bplaced.clayn.cfs.impl.local.ClaynFileSystem;
-import org.junit.rules.TemporaryFolder;
+import net.bplaced.clayn.cfs.test.DirectoryTest;
+import net.bplaced.clayn.test.base.local.LocalBaseTest;
 
 /**
  *
  * @author Clayn <clayn_osmato@gmx.de>
  */
-public interface LocalBaseTest
+public class LocalDirectoryTest extends DirectoryTest implements LocalBaseTest
 {
 
-    public static final TemporaryFolder FOLDER = new TemporaryFolder();
-    public static final BooleanProperty CREATED = new SimpleBooleanProperty(
-            false);
-
-    public default CFileSystem getLocalFileSystem() throws Exception
+    public LocalDirectoryTest()
     {
-        if (!CREATED.get())
-        {
-            FOLDER.create();
-            CREATED.set(true);
-        }
-        File root = FOLDER.newFolder();
-        return new ClaynFileSystem(root);
+        runningTests.addAll(Arrays.asList(TEST_ALL));
+    }
+
+    @Override
+    public CFileSystem getFileSystem() throws Exception
+    {
+        return getLocalFileSystem();
     }
 
 }

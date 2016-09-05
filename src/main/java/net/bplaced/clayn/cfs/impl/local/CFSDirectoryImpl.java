@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import static java.nio.file.StandardWatchEventKinds.*;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -19,9 +20,11 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.bplaced.clayn.cfs.AbstractActiveDirectory;
 import net.bplaced.clayn.cfs.ActiveDirectory;
 import net.bplaced.clayn.cfs.CFileSystem;
+import net.bplaced.clayn.cfs.Deletable;
 import net.bplaced.clayn.cfs.Directory;
 import net.bplaced.clayn.cfs.FileModification;
 import net.bplaced.clayn.cfs.SimpleFile;
@@ -141,6 +144,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public void mkDir() throws IOException
     {
+        if (!parent.exists())
+        {
+            throw new IOException("Parent " + parent + " does not exist");
+        }
         Files.createDirectory(directory.toPath());
     }
 
@@ -153,8 +160,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public List<SimpleFile> listFiles(SimpleFileFilter sff) throws IOException
     {
-        return Files.list(directory.toPath()).map(Path::toFile).filter(File::isFile).map(
-                this::createFile).filter(sff).collect(Collectors.toList());
+        return Files.list(directory.toPath()).map(Path::toFile).filter(
+                File::isFile).map(
+                        this::createFile).filter(sff).collect(
+                Collectors.toList());
     }
 
     private SimpleFile createFile(File f)
@@ -263,6 +272,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public List<Directory> listDirectories() throws IOException
     {
+        if (!exists())
+        {
+            return new ArrayList<>();
+        }
         ActiveDirectory dir = this;
         return Arrays.stream(directory.listFiles()).filter(File::isDirectory).map(
                 (File t)
@@ -289,38 +302,33 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     {
         deleteDirectory(directory);
     }
-    
-    private void deleteFile(File f) throws IOException
+
+    private void delete0(Deletable del)
     {
-        if(!f.delete())
-            throw new IOException("Could not delete "+toString()+cfs.getSeparator()+f.getName());
+        try
+        {
+            del.delete();
+        } catch (IOException ex)
+        {
+            throw new RuntimeException(ex);
+        }
     }
-    
+
     private void deleteDirectory(File f) throws IOException
     {
-        File files[]=f.listFiles();
-        if(files!=null)
+        Stream.concat(listDirectories().stream(), listFiles().stream()).forEach(
+                this::delete0);
+        if (!exists())
         {
-            for(File file:files)
-            {
-                if(file.isDirectory())
-                {
-                    deleteDirectory(f);
-                }
-                else
-                {
-                    deleteFile(f);
-                }
-            }
+            return;
         }
-        if(f.delete())
-            throw new IOException("Failed to delete "+toString());
+        f.delete();
     }
 
     @Override
     public String getName()
     {
-        return parent==null?"/":partName;
+        return parent == null ? "/" : partName;
     }
 
 }

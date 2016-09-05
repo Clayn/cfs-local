@@ -27,9 +27,10 @@ import net.bplaced.clayn.test.base.local.LocalBaseTest;
  */
 public class LocalCFileSystemTest extends CFileSystemTest implements LocalBaseTest
 {
+
     public LocalCFileSystemTest()
     {
-        runningTests.addAll(Arrays.asList(TEST_CREATE,TEST_ROOT,TEST_SETTINGS));
+        runningTests.addAll(Arrays.asList(TEST_CREATE, TEST_ROOT, TEST_SETTINGS));
     }
 
     @Override
@@ -37,6 +38,5 @@ public class LocalCFileSystemTest extends CFileSystemTest implements LocalBaseTe
     {
         return getLocalFileSystem();
     }
-    
 
 }
