@@ -33,12 +33,10 @@ public class LocalDirectoryTest extends DirectoryTest implements LocalBaseTest
         runningTests.addAll(Arrays.asList(TEST_ALL));
     }
 
-    
-    
     @Override
     public CFileSystem getFileSystem() throws Exception
     {
         return getLocalFileSystem();
     }
-    
+
 }

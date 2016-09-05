@@ -144,8 +144,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public void mkDir() throws IOException
     {
-        if(!parent.exists())
-            throw new IOException("Parent "+parent+" does not exist");
+        if (!parent.exists())
+        {
+            throw new IOException("Parent " + parent + " does not exist");
+        }
         Files.createDirectory(directory.toPath());
     }
 
@@ -158,8 +160,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public List<SimpleFile> listFiles(SimpleFileFilter sff) throws IOException
     {
-        return Files.list(directory.toPath()).map(Path::toFile).filter(File::isFile).map(
-                this::createFile).filter(sff).collect(Collectors.toList());
+        return Files.list(directory.toPath()).map(Path::toFile).filter(
+                File::isFile).map(
+                        this::createFile).filter(sff).collect(
+                Collectors.toList());
     }
 
     private SimpleFile createFile(File f)
@@ -268,8 +272,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public List<Directory> listDirectories() throws IOException
     {
-        if(!exists())
+        if (!exists())
+        {
             return new ArrayList<>();
+        }
         ActiveDirectory dir = this;
         return Arrays.stream(directory.listFiles()).filter(File::isDirectory).map(
                 (File t)
@@ -296,7 +302,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     {
         deleteDirectory(directory);
     }
-    
+
     private void delete0(Deletable del)
     {
         try
@@ -307,20 +313,22 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
             throw new RuntimeException(ex);
         }
     }
-    
+
     private void deleteDirectory(File f) throws IOException
     {
         Stream.concat(listDirectories().stream(), listFiles().stream()).forEach(
                 this::delete0);
-        if(!exists())
+        if (!exists())
+        {
             return;
+        }
         f.delete();
     }
 
     @Override
     public String getName()
     {
-        return parent==null?"/":partName;
+        return parent == null ? "/" : partName;
     }
 
 }

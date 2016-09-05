@@ -29,18 +29,20 @@ import org.junit.rules.TemporaryFolder;
  */
 public interface LocalBaseTest
 {
-    public static final TemporaryFolder FOLDER=new TemporaryFolder();
-    public static final BooleanProperty CREATED=new SimpleBooleanProperty(false);
-    
+
+    public static final TemporaryFolder FOLDER = new TemporaryFolder();
+    public static final BooleanProperty CREATED = new SimpleBooleanProperty(
+            false);
+
     public default CFileSystem getLocalFileSystem() throws Exception
     {
-        if(!CREATED.get())
+        if (!CREATED.get())
         {
             FOLDER.create();
             CREATED.set(true);
         }
-        File root=FOLDER.newFolder();
+        File root = FOLDER.newFolder();
         return new ClaynFileSystem(root);
     }
-    
+
 }

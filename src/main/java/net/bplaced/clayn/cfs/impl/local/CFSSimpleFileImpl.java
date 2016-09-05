@@ -49,8 +49,10 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public void delete() throws IOException
     {
-        if(!exists())
+        if (!exists())
+        {
             return;
+        }
         Files.delete(realFile);
     }
 
@@ -138,8 +140,7 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public String toString()
     {
-        return parent.toString()+getName();
+        return parent.toString() + getName();
     }
-    
-    
+
 }
