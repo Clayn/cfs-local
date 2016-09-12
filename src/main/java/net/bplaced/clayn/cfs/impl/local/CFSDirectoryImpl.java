@@ -322,7 +322,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         {
             return;
         }
-        f.delete();
+        if(!f.delete())
+        {
+            throw new IOException("Failed to delete "+this);
+        }
     }
 
     @Override
