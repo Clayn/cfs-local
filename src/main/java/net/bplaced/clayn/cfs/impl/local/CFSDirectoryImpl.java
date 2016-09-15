@@ -67,6 +67,8 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     {
         this.cfs = cfs;
         this.directory = dir;
+        System.out.println("Local Name: "+partName);
+        System.out.println("Local Dir: "+dir);
         this.parent = parent;
         this.partName = partName;
         installWatch();
@@ -90,16 +92,16 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         boolean fromRoot = path.startsWith("/");
         path = IOUtils.cleanPath(path);
         String parts[] = path.split("/");
-        ActiveDirectory end = this;
+        CFSDirectoryImpl end = this;
         if (fromRoot)
         {
-            end = cfs.getActiveRoot();
+            end = (CFSDirectoryImpl) cfs.getActiveRoot();
         }
         for (String part : parts)
         {
             if (!".".equals(part) && !"..".equals(part))
             {
-                end = new CFSDirectoryImpl(cfs, new File(directory, part), end,
+                end = new CFSDirectoryImpl(cfs, new File(end.directory, part), end,
                         part);
             } else if (".".equals(part))
             {
@@ -111,7 +113,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                     throw new IOException(
                             "No parent directory available for 'root' directory");
                 }
-                end = end.getParent();
+                end = (CFSDirectoryImpl) end.getParent();
             }
         }
 
@@ -144,10 +146,11 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public void mkDir() throws IOException
     {
-        if (!parent.exists())
+        if (parent!=null&&!parent.exists())
         {
             throw new IOException("Parent " + parent + " does not exist");
         }
+        System.out.println("Directory: "+directory.toPath());
         Files.createDirectory(directory.toPath());
     }
 
