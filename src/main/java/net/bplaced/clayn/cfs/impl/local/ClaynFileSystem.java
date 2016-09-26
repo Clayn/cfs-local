@@ -107,4 +107,31 @@ public class ClaynFileSystem implements CFileSystem
         return charset;
     }
 
+    
+    /**
+     * Creates a new CFileSystem that operates on the local file system. The root 
+     * for this filesystem is the directory returned by {@code user.dir}
+     * @return a new CFileSystem with {@code user.dir} as root
+     * @throws IOException if an I/O Exception occures
+     * @since 0.3.0
+     * @see #getLocalFileSystem(java.io.File) 
+     * @see #getDBFileSystem(java.util.function.Supplier) 
+     */
+    public static CFileSystem getLocalFileSystem() throws IOException
+    {
+        return new ClaynFileSystem(new File(System.getProperty("user.dir")));
+    }
+    
+    public static CFileSystem getAppDataFileSystem(String name) throws IOException
+    {
+        return new ClaynFileSystem(new File(getAppDataDir(), name));
+    }
+    
+    private static File getAppDataDir()
+    {
+        boolean windows=System.getProperty("os.name").toLowerCase().contains("windows");
+        String dirName=windows?System.getenv("APPDATA"):System.getProperty(
+                "user.home");
+        return new File(dirName);
+    }
 }

@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import net.bplaced.clayn.cfs.CFileSystem;
 import net.bplaced.clayn.cfs.Directory;
@@ -76,6 +77,16 @@ public class CFSSimpleFileImpl implements SimpleFile
         return Files.newOutputStream(realFile);
     }
 
+    @Override
+    public OutputStream openAppend() throws IOException
+    {
+        if (filesystem.getFileSettings().getCreateOnAccess())
+        {
+            createSafe();
+        }
+        return Files.newOutputStream(realFile, StandardOpenOption.APPEND);
+    }
+    
     @Override
     public Directory getParent()
     {

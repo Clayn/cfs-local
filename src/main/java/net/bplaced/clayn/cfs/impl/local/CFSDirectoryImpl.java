@@ -45,7 +45,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
 {
 
     private Timer watchTimer;
-    private Charset charset;
+    private Charset charset=Charset.defaultCharset();
     private final CFileSystem cfs;
     private final ActiveDirectory parent;
     private final File directory;
