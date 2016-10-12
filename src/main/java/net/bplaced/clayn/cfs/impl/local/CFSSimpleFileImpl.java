@@ -8,10 +8,13 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 import net.bplaced.clayn.cfs.CFileSystem;
 import net.bplaced.clayn.cfs.Directory;
+import net.bplaced.clayn.cfs.FileAttributes;
 import net.bplaced.clayn.cfs.SimpleFile;
+import net.bplaced.clayn.cfs.err.CFSException;
 
 /**
  *
@@ -86,7 +89,7 @@ public class CFSSimpleFileImpl implements SimpleFile
         }
         return Files.newOutputStream(realFile, StandardOpenOption.APPEND);
     }
-    
+
     @Override
     public Directory getParent()
     {
@@ -152,6 +155,50 @@ public class CFSSimpleFileImpl implements SimpleFile
     public String toString()
     {
         return parent.toString() + getName();
+    }
+
+    @Override
+    public FileAttributes getFileAttributes()
+    {
+        return new FileAttributes()
+        {
+            BasicFileAttributes bfa;
+
+            private void update()
+            {
+                if(!exists())
+                    return;
+                try
+                {
+                    bfa = Files.readAttributes(realFile,
+                            BasicFileAttributes.class);
+                } catch (IOException ex)
+                {
+                    throw new CFSException(ex);
+                }
+            }
+
+            @Override
+            public long lastModified()
+            {
+                update();
+                return bfa==null?-1:bfa.lastModifiedTime().toMillis();
+            }
+
+            @Override
+            public long creationTime()
+            {
+                update();
+                return bfa==null?-1:bfa.creationTime().toMillis();
+            }
+
+            @Override
+            public long lastUsed()
+            {
+                update();
+                return bfa==null?-1:bfa.lastAccessTime().toMillis();
+            }
+        };
     }
 
 }
