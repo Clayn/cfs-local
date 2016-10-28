@@ -45,13 +45,20 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
 {
 
     private Timer watchTimer;
-    private Charset charset;
+    private Charset charset=Charset.defaultCharset();
     private final CFileSystem cfs;
     private final ActiveDirectory parent;
     private final File directory;
     private final String partName;
     private WatchService watchService;
 
+    File getDirectory()
+    {
+        return directory;
+    }
+
+    
+    
     CFileSystem getCfs()
     {
         return cfs;
@@ -90,16 +97,16 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         boolean fromRoot = path.startsWith("/");
         path = IOUtils.cleanPath(path);
         String parts[] = path.split("/");
-        ActiveDirectory end = this;
+        CFSDirectoryImpl end = this;
         if (fromRoot)
         {
-            end = cfs.getActiveRoot();
+            end = (CFSDirectoryImpl) cfs.getActiveRoot();
         }
         for (String part : parts)
         {
             if (!".".equals(part) && !"..".equals(part))
             {
-                end = new CFSDirectoryImpl(cfs, new File(directory, part), end,
+                end = new CFSDirectoryImpl(cfs, new File(end.directory, part), end,
                         part);
             } else if (".".equals(part))
             {
@@ -111,7 +118,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                     throw new IOException(
                             "No parent directory available for 'root' directory");
                 }
-                end = end.getParent();
+                end = (CFSDirectoryImpl) end.getParent();
             }
         }
 
@@ -144,10 +151,11 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public void mkDir() throws IOException
     {
-        if (!parent.exists())
+        if (parent!=null&&!parent.exists())
         {
             throw new IOException("Parent " + parent + " does not exist");
         }
+        System.out.println("Directory: "+directory.toPath());
         Files.createDirectory(directory.toPath());
     }
 
@@ -322,9 +330,9 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         {
             return;
         }
-        if(!f.delete())
+        if (!f.delete())
         {
-            throw new IOException("Failed to delete "+this);
+            throw new IOException("Failed to delete " + this);
         }
     }
 
