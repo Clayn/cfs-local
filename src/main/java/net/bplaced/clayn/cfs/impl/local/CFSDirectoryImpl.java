@@ -52,6 +52,13 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     private final String partName;
     private WatchService watchService;
 
+    File getDirectory()
+    {
+        return directory;
+    }
+
+    
+    
     CFileSystem getCfs()
     {
         return cfs;
@@ -67,8 +74,6 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     {
         this.cfs = cfs;
         this.directory = dir;
-        System.out.println("Local Name: "+partName);
-        System.out.println("Local Dir: "+dir);
         this.parent = parent;
         this.partName = partName;
         installWatch();

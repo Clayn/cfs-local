@@ -107,31 +107,50 @@ public class ClaynFileSystem implements CFileSystem
         return charset;
     }
 
-    
     /**
-     * Creates a new CFileSystem that operates on the local file system. The root 
-     * for this filesystem is the directory returned by {@code user.dir}
+     * Creates a new CFileSystem that operates on the local file system. The
+     * root for this filesystem is the directory returned by {@code user.dir}
+     *
      * @return a new CFileSystem with {@code user.dir} as root
      * @throws IOException if an I/O Exception occures
      * @since 0.3.0
-     * @see #getLocalFileSystem(java.io.File) 
-     * @see #getDBFileSystem(java.util.function.Supplier) 
      */
     public static CFileSystem getLocalFileSystem() throws IOException
     {
         return new ClaynFileSystem(new File(System.getProperty("user.dir")));
     }
-    
+
+    /**
+     * Creates a new CFileSystem that operates on the local filesystem. The root
+     * for this filesystem will be a directory with the given name inside of the
+     * OS directory meant for user data. For windows this is
+     * {@code System.getenv("APPDATA")} and {@code user.home} for all other
+     * operating system.
+     *
+     * @param name the name that should be used for the filesystems directory
+     * @return a new CFileSystem with directory {@code name} inside the app directory
+     * @throws IOException if an I/O Exception occures
+     * @since 0.3.0
+     */
     public static CFileSystem getAppDataFileSystem(String name) throws IOException
     {
         return new ClaynFileSystem(new File(getAppDataDir(), name));
     }
-    
+
     private static File getAppDataDir()
     {
-        boolean windows=System.getProperty("os.name").toLowerCase().contains("windows");
-        String dirName=windows?System.getenv("APPDATA"):System.getProperty(
+        boolean windows = System.getProperty("os.name").toLowerCase().contains(
+                "windows");
+        String dirName = windows ? System.getenv("APPDATA") : System.getProperty(
                 "user.home");
         return new File(dirName);
+    }
+
+    @Override
+    public CFileSystem subFileSystem(String dir) throws IOException
+    {
+        CFSDirectoryImpl nRoot=(CFSDirectoryImpl) getDirectory(dir);
+        nRoot.mkDirs();
+        return new ClaynFileSystem(nRoot.getDirectory());
     }
 }
