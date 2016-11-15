@@ -292,7 +292,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                     try
                     {
                         String parts[] = t.toString().split(
-                                File.separator);
+                                "\\"+File.separator);
                         return new CFSDirectoryImpl(cfs, t, dir,
                                 parts.length == 0 ? null : parts[parts.length - 1]);
                     } catch (IOException ex)
