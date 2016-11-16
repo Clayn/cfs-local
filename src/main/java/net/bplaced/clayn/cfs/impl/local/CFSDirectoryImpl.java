@@ -339,7 +339,13 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public String getName()
     {
-        return parent == null ? "/" : partName;
+        return partName==null?"/":partName;
+    }
+
+    @Override
+    public String getPath()
+    {
+        return toString();
     }
 
 }

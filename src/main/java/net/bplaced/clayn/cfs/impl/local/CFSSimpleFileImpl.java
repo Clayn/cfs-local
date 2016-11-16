@@ -201,4 +201,10 @@ public class CFSSimpleFileImpl implements SimpleFile
         };
     }
 
+    @Override
+    public String getPath()
+    {
+        String pPath=parent.getPath();
+        return pPath.endsWith("/")?pPath:pPath+"/";
+    }
 }
