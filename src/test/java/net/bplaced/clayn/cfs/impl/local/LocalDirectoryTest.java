@@ -16,7 +16,6 @@
  */
 package net.bplaced.clayn.cfs.impl.local;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import net.bplaced.clayn.cfs.CFileSystem;
 import net.bplaced.clayn.cfs.test.DirectoryTest;
@@ -31,9 +30,12 @@ public class LocalDirectoryTest extends DirectoryTest implements LocalBaseTest
 
     public LocalDirectoryTest()
     {
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(TEST_ALL));
-        list.remove(TEST_DELETE);
-        runningTests.addAll(list);
+        runningTests.addAll(Arrays.asList(TEST_ALL));
+        String os=System.getProperty("os.name");
+        if(os.toLowerCase().contains("windows"))
+        {
+            runningTests.remove(TEST_DELETE);
+        }
     }
 
     @Override
