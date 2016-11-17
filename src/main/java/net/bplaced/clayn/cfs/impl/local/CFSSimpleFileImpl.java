@@ -201,4 +201,9 @@ public class CFSSimpleFileImpl implements SimpleFile
         };
     }
 
+    @Override
+    public String getPath()
+    {
+        return toString();
+    }
 }

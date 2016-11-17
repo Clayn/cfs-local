@@ -31,6 +31,11 @@ public class LocalDirectoryTest extends DirectoryTest implements LocalBaseTest
     public LocalDirectoryTest()
     {
         runningTests.addAll(Arrays.asList(TEST_ALL));
+        String os=System.getProperty("os.name");
+        if(os.toLowerCase().contains("windows"))
+        {
+            runningTests.remove(TEST_DELETE);
+        }
     }
 
     @Override
