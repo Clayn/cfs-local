@@ -71,14 +71,14 @@
     <name>ClaynFileSystem Impl-Local</name>
     <distributionManagement>
         <repository>
-            <id>clayn</id>
+            <id>${repo.id}</id>
             <name>Internal Release Repository</name>
-            <url>http://192.168.1.21:9000/repository/clayn/</url>
+            <url>${repo.url}</url>
         </repository>
         <snapshotRepository>
-            <id>clayn</id>
+            <id>${repo.id}</id>
             <name>Internal Snapshot Repository</name>
-            <url>http://192.168.1.21:9000/repository/clayn/</url>
+            <url>${repo.url}</url>
         </snapshotRepository>
     </distributionManagement>
     <dependencies>
