@@ -30,6 +30,7 @@ import net.bplaced.clayn.cfs.FileModification;
 import net.bplaced.clayn.cfs.SimpleFile;
 import net.bplaced.clayn.cfs.SimpleFileFilter;
 import net.bplaced.clayn.cfs.util.IOUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of an {@link ActiveDirectory} that represents a directory in
@@ -44,8 +45,10 @@ import net.bplaced.clayn.cfs.util.IOUtils;
 public class CFSDirectoryImpl extends AbstractActiveDirectory
 {
 
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(
+            CFSDirectoryImpl.class);
     private Timer watchTimer;
-    private Charset charset=Charset.defaultCharset();
+    private Charset charset = Charset.defaultCharset();
     private final CFileSystem cfs;
     private final ActiveDirectory parent;
     private final File directory;
@@ -77,18 +80,31 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         this.parent = parent;
         this.partName = partName;
         installWatch();
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Created directory for {0}", dir);
+        }
     }
 
     private void installWatch() throws IOException
     {
         if (!exists())
         {
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug(
+                        "Filewatch won't be installed for not existing directory");
+            }
             return;
         }
         FileSystem fs = FileSystems.getDefault();
         watchService = fs.newWatchService();
         directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE,
                 ENTRY_MODIFY);
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Successfully installed the filewatch");
+        }
     }
 
     @Override
@@ -106,7 +122,8 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         {
             if (!".".equals(part) && !"..".equals(part))
             {
-                end = new CFSDirectoryImpl(cfs, new File(end.directory, part), end,
+                end = new CFSDirectoryImpl(cfs, new File(end.directory, part),
+                        end,
                         part);
             } else if (".".equals(part))
             {
@@ -151,11 +168,11 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public void mkDir() throws IOException
     {
-        if (parent!=null&&!parent.exists())
+        if (parent != null && !parent.exists())
         {
             throw new IOException("Parent " + parent + " does not exist");
         }
-        System.out.println("Directory: "+directory.toPath());
+        System.out.println("Directory: " + directory.toPath());
         Files.createDirectory(directory.toPath());
     }
 
@@ -221,6 +238,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                                                         charset),
                                                 FileModification.Modification.CREATE,
                                                 time)));
+                                if (LOG.isDebugEnabled())
+                                {
+                                    LOG.debug("Recieved file creation event");
+                                }
                             } else if (evt.kind() == ENTRY_DELETE)
                             {
                                 Path p = (Path) evt.context();
@@ -230,6 +251,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                                                         charset),
                                                 FileModification.Modification.DELETE,
                                                 time)));
+                                if (LOG.isDebugEnabled())
+                                {
+                                    LOG.debug("Recieved file deletion event");
+                                }
                             } else if (evt.kind() == ENTRY_MODIFY)
                             {
                                 Path p = (Path) evt.context();
@@ -239,6 +264,10 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                                                         charset),
                                                 FileModification.Modification.MODIFY,
                                                 time)));
+                                if (LOG.isDebugEnabled())
+                                {
+                                    LOG.debug("Recieved file modification event");
+                                }
                             }
                 });
             }
@@ -292,7 +321,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
                     try
                     {
                         String parts[] = t.toString().split(
-                                "\\"+File.separator);
+                                "\\" + File.separator);
                         return new CFSDirectoryImpl(cfs, t, dir,
                                 parts.length == 0 ? null : parts[parts.length - 1]);
                     } catch (IOException ex)

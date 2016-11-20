@@ -15,6 +15,8 @@ import net.bplaced.clayn.cfs.Directory;
 import net.bplaced.clayn.cfs.FileAttributes;
 import net.bplaced.clayn.cfs.SimpleFile;
 import net.bplaced.clayn.cfs.err.CFSException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -25,6 +27,7 @@ import net.bplaced.clayn.cfs.err.CFSException;
 public class CFSSimpleFileImpl implements SimpleFile
 {
 
+    private static final Logger LOG=LoggerFactory.getLogger(CFSSimpleFileImpl.class);
     private final Path realFile;
     private final Directory parent;
     private final Charset charset;
@@ -63,8 +66,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public InputStream openRead() throws IOException
     {
+        if(LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {0} for reading",getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if(LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {0} before accessing");
+            }
             createSafe();
         }
         return Files.newInputStream(realFile);
@@ -73,8 +84,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public OutputStream openWrite() throws IOException
     {
+        if(LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {0} for writing",getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if(LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {0} before accessing");
+            }
             createSafe();
         }
         return Files.newOutputStream(realFile);
@@ -83,8 +102,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public OutputStream openAppend() throws IOException
     {
+        if(LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {0} for appending",getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if(LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {0} before accessing");
+            }
             createSafe();
         }
         return Files.newOutputStream(realFile, StandardOpenOption.APPEND);
