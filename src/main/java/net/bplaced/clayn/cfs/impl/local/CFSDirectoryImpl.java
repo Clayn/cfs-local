@@ -60,8 +60,6 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         return directory;
     }
 
-    
-    
     CFileSystem getCfs()
     {
         return cfs;
@@ -368,7 +366,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
     @Override
     public String getName()
     {
-        return partName==null?"/":partName;
+        return partName == null ? "/" : partName;
     }
 
     @Override
