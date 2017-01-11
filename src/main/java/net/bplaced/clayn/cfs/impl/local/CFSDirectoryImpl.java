@@ -36,7 +36,10 @@ import org.slf4j.LoggerFactory;
  * Implementation of an {@link ActiveDirectory} that represents a directory in
  * the local filesystem. The notification of filechanges depends on the
  * underlying filesystem and the reportings from it. A directory should never be
- * created other than with the {@link CFileSystem filesystem}.
+ * created other than with the {@link CFileSystem filesystem}. <br><br>
+ * While this implementation is an active directory it is recommended to not 
+ * activate to many at once since that may reduce the overall performance by 
+ * having to many threads.
  *
  * @author Clayn
  * @since 0.1
