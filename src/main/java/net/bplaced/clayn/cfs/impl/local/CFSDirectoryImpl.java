@@ -80,7 +80,7 @@ public class CFSDirectoryImpl extends AbstractActiveDirectory
         installWatch();
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Created directory for {0}", dir);
+            LOG.debug("Created directory for {}", dir);
         }
     }
 

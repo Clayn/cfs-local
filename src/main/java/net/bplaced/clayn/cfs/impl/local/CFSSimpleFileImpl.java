@@ -69,13 +69,13 @@ public class CFSSimpleFileImpl implements SimpleFile
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Open {0} for reading", getPath());
+            LOG.debug("Open {} for reading", getPath());
         }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
             if (LOG.isDebugEnabled())
             {
-                LOG.debug("Create {0} before accessing");
+                LOG.debug("Create {} before accessing");
             }
             createSafe();
         }
@@ -87,13 +87,13 @@ public class CFSSimpleFileImpl implements SimpleFile
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Open {0} for writing", getPath());
+            LOG.debug("Open {} for writing", getPath());
         }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
             if (LOG.isDebugEnabled())
             {
-                LOG.debug("Create {0} before accessing");
+                LOG.debug("Create {} before accessing");
             }
             createSafe();
         }
@@ -105,13 +105,13 @@ public class CFSSimpleFileImpl implements SimpleFile
     {
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Open {0} for appending", getPath());
+            LOG.debug("Open {} for appending", getPath());
         }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
             if (LOG.isDebugEnabled())
             {
-                LOG.debug("Create {0} before accessing");
+                LOG.debug("Create {} before accessing");
             }
             createSafe();
         }
