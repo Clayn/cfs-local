@@ -7,6 +7,8 @@ import net.bplaced.clayn.cfs.ActiveDirectory;
 import net.bplaced.clayn.cfs.CFileSystem;
 import net.bplaced.clayn.cfs.FileSettings;
 import net.bplaced.clayn.cfs.SimpleFileSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link CFileSystem} implementation that uses the local filesystem. Files
@@ -26,6 +28,8 @@ import net.bplaced.clayn.cfs.SimpleFileSettings;
 public class ClaynFileSystem implements CFileSystem
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(
+            ClaynFileSystem.class);
     final FileSettings SETTINGS = new SimpleFileSettings();
     private Charset charset;
 
@@ -43,6 +47,10 @@ public class ClaynFileSystem implements CFileSystem
     {
         this.root = new CFSDirectoryImpl(this, root, null, null);
         this.root.mkDirs();
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Created a new ClaynFileSystem using: {0}", root);
+        }
     }
 
     /**
@@ -128,7 +136,8 @@ public class ClaynFileSystem implements CFileSystem
      * operating system.
      *
      * @param name the name that should be used for the filesystems directory
-     * @return a new CFileSystem with directory {@code name} inside the app directory
+     * @return a new CFileSystem with directory {@code name} inside the app
+     * directory
      * @throws IOException if an I/O Exception occures
      * @since 0.3.0
      */
@@ -149,7 +158,7 @@ public class ClaynFileSystem implements CFileSystem
     @Override
     public CFileSystem subFileSystem(String dir) throws IOException
     {
-        CFSDirectoryImpl nRoot=(CFSDirectoryImpl) getDirectory(dir);
+        CFSDirectoryImpl nRoot = (CFSDirectoryImpl) getDirectory(dir);
         nRoot.mkDirs();
         return new ClaynFileSystem(nRoot.getDirectory());
     }

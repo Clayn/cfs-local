@@ -15,6 +15,8 @@ import net.bplaced.clayn.cfs.Directory;
 import net.bplaced.clayn.cfs.FileAttributes;
 import net.bplaced.clayn.cfs.SimpleFile;
 import net.bplaced.clayn.cfs.err.CFSException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -25,6 +27,8 @@ import net.bplaced.clayn.cfs.err.CFSException;
 public class CFSSimpleFileImpl implements SimpleFile
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(
+            CFSSimpleFileImpl.class);
     private final Path realFile;
     private final Directory parent;
     private final Charset charset;
@@ -63,8 +67,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public InputStream openRead() throws IOException
     {
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {} for reading", getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {} before accessing");
+            }
             createSafe();
         }
         return Files.newInputStream(realFile);
@@ -73,8 +85,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public OutputStream openWrite() throws IOException
     {
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {} for writing", getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {} before accessing");
+            }
             createSafe();
         }
         return Files.newOutputStream(realFile);
@@ -83,8 +103,16 @@ public class CFSSimpleFileImpl implements SimpleFile
     @Override
     public OutputStream openAppend() throws IOException
     {
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Open {} for appending", getPath());
+        }
         if (filesystem.getFileSettings().getCreateOnAccess())
         {
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug("Create {} before accessing");
+            }
             createSafe();
         }
         return Files.newOutputStream(realFile, StandardOpenOption.APPEND);
@@ -166,8 +194,10 @@ public class CFSSimpleFileImpl implements SimpleFile
 
             private void update()
             {
-                if(!exists())
+                if (!exists())
+                {
                     return;
+                }
                 try
                 {
                     bfa = Files.readAttributes(realFile,
@@ -182,21 +212,21 @@ public class CFSSimpleFileImpl implements SimpleFile
             public long lastModified()
             {
                 update();
-                return bfa==null?-1:bfa.lastModifiedTime().toMillis();
+                return bfa == null ? -1 : bfa.lastModifiedTime().toMillis();
             }
 
             @Override
             public long creationTime()
             {
                 update();
-                return bfa==null?-1:bfa.creationTime().toMillis();
+                return bfa == null ? -1 : bfa.creationTime().toMillis();
             }
 
             @Override
             public long lastUsed()
             {
                 update();
-                return bfa==null?-1:bfa.lastAccessTime().toMillis();
+                return bfa == null ? -1 : bfa.lastAccessTime().toMillis();
             }
         };
     }

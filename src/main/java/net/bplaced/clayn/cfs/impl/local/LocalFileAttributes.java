@@ -43,8 +43,7 @@ public class LocalFileAttributes implements FileAttributes
     {
         this.used = used;
     }
-    
-    
+
     @Override
     public long lastModified()
     {
@@ -62,5 +61,5 @@ public class LocalFileAttributes implements FileAttributes
     {
         return used;
     }
-    
+
 }
