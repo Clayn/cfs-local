@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.bplaced.clayn</groupId>
     <artifactId>cfs-local</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>net.bplaced.clayn</groupId>
             <artifactId>cfs-api</artifactId>
-            <version>0.3.0-SNAPSHOT</version>
+            <version>0.3.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cfs-test</artifactId>
-            <version>0.3.0-SNAPSHOT</version>
+            <version>0.3.0</version>
             <scope>test</scope>
             <classifier>tests</classifier>
         </dependency>
