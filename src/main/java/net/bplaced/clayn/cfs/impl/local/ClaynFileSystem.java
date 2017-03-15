@@ -49,7 +49,7 @@ public class ClaynFileSystem implements CFileSystem
         this.root.mkDirs();
         if (LOG.isDebugEnabled())
         {
-            LOG.debug("Created a new ClaynFileSystem using: {0}", root);
+            LOG.debug("Created a new ClaynFileSystem using: {}", root);
         }
     }
 
