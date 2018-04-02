@@ -71,15 +71,10 @@
     <name>ClaynFileSystem Impl-Local</name>
     <distributionManagement>
         <repository>
-            <id>${repo.id}</id>
-            <name>Internal Release Repository</name>
-            <url>${repo.url}</url>
+            <id>asus-nexus</id>
+            <name>Clayns Internal Nexus Repository</name>
+            <url>http://192.168.1.63:8081/repository/maven-clayn/</url>
         </repository>
-        <snapshotRepository>
-            <id>${repo.id}</id>
-            <name>Internal Snapshot Repository</name>
-            <url>${repo.url}</url>
-        </snapshotRepository>
     </distributionManagement>
     <dependencies>
         <dependency>
